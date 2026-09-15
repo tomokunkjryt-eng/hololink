@@ -2,499 +2,536 @@
 <html lang="ja">  
 <head>  
 <meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>ホロライブJP メンバー一覧</title>  
+<meta name="viewport" content="width=device-width,initial-scale=1">  
+<title>ホロライブJP メンバー</title>  
   
 <style>  
 *{box-sizing:border-box}  
   
 body{  
   margin:0;  
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;  
-  background:linear-gradient(135deg,#eef2ff,#fff1f8);  
+  background:#f5f7fb;  
   color:#222;  
+  font-family:Arial,"Noto Sans JP",sans-serif;  
 }  
   
 header{  
+  background:#fff;  
+  padding:18px;  
   text-align:center;  
-  padding:34px 16px 22px;  
+  box-shadow:0 2px 10px #ddd;  
+  position:sticky;  
+  top:0;  
+  z-index:10;  
 }  
   
-header h1{  
-  margin:0;  
-  font-size:clamp(25px,5vw,36px);  
-}  
-  
-header p{  
-  margin:8px 0 0;  
-  color:#777;  
+h1{  
+  margin:0 0 14px;  
+  font-size:25px;  
 }  
   
 .controls{  
-  max-width:1100px;  
-  margin:auto;  
-  padding:0 15px 22px;  
-}  
-  
-#search{  
-  width:100%;  
-  padding:14px 17px;  
-  border:0;  
-  border-radius:15px;  
-  font-size:16px;  
-  outline:none;  
-  box-shadow:0 5px 18px rgba(0,0,0,.08);  
-}  
-  
-.filters{  
   display:flex;  
-  flex-wrap:wrap;  
   gap:8px;  
   justify-content:center;  
-  margin-top:13px;  
+  flex-wrap:wrap;  
 }  
   
-.filter{  
-  border:0;  
-  padding:9px 14px;  
-  border-radius:999px;  
+input,select{  
+  padding:10px 12px;  
+  border:1px solid #ccc;  
+  border-radius:10px;  
+  font-size:14px;  
   background:#fff;  
-  cursor:pointer;  
-  box-shadow:0 3px 10px rgba(0,0,0,.07);  
-  transition:.18s;  
 }  
   
-.filter:hover{  
-  transform:translateY(-2px);  
-}  
-  
-.filter.active{  
-  background:#222;  
-  color:#fff;  
-}  
-  
-#count{  
-  text-align:center;  
-  color:#777;  
-  margin:2px 0 20px;  
+#status{  
+  margin-top:9px;  
+  font-size:12px;  
+  color:#666;  
 }  
   
 #members{  
   max-width:1200px;  
-  margin:auto;  
-  padding:0 15px 50px;  
+  margin:20px auto;  
+  padding:0 12px 30px;  
   display:grid;  
-  grid-template-columns:repeat(auto-fill,minmax(235px,1fr));  
-  gap:18px;  
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));  
+  gap:15px;  
 }  
   
 .card{  
   background:#fff;  
-  border-radius:20px;  
-  padding:20px;  
+  border-radius:16px;  
+  padding:12px;  
   text-align:center;  
-  box-shadow:0 8px 25px rgba(0,0,0,.08);  
-  transition:.22s;  
+  box-shadow:0 3px 12px #ddd;  
+  transition:.2s;  
+  cursor:pointer;  
 }  
   
 .card:hover{  
-  transform:translateY(-4px);  
-  box-shadow:0 14px 30px rgba(0,0,0,.12);  
+  transform:translateY(-3px);  
 }  
   
 .main-avatar{  
-  width:105px;  
-  height:105px;  
+  width:120px;  
+  height:120px;  
   border-radius:50%;  
   object-fit:cover;  
-  display:block;  
-  margin:0 auto 12px;  
-  background:#eee;  
   border:4px solid transparent;  
-  padding:0;  
   transition:.2s;  
 }  
   
 .main-avatar.live{  
-  border-color:#ff1f1f;  
-  box-shadow:  
-    0 0 0 3px rgba(255,31,31,.18),  
-    0 0 18px rgba(255,31,31,.45);  
+  border-color:#f22;  
 }  
   
-.main-avatar.scheduled{  
-  border-color:#1877f2;  
-  box-shadow:  
-    0 0 0 3px rgba(24,119,242,.18),  
-    0 0 18px rgba(24,119,242,.35);  
+.main-avatar.upcoming{  
+  border-color:#1683ff;  
 }  
   
-.main-link{  
-  display:block;  
-  width:105px;  
-  height:105px;  
-  margin:0 auto 12px;  
-  border-radius:50%;  
+.name{  
+  font-weight:bold;  
+  font-size:17px;  
+  margin:9px 0 3px;  
 }  
   
-.main-link .main-avatar{  
-  margin:0;  
+.group{  
+  font-size:12px;  
+  color:#777;  
+  white-space:pre-wrap;  
+}  
+  
+.date{  
+  font-size:11px;  
+  color:#999;  
+  margin-top:5px;  
 }  
   
 .profile-row{  
   display:flex;  
   align-items:center;  
   justify-content:center;  
-  gap:14px;  
-  min-height:105px;  
+  gap:8px;  
+  margin-top:8px;  
 }  
   
 .stream-info{  
   display:flex;  
   flex-direction:column;  
   align-items:flex-start;  
-  gap:7px;  
-  text-align:left;  
+  gap:5px;  
+  min-height:30px;  
 }  
   
 .stream-item{  
   display:flex;  
   align-items:center;  
-  gap:7px;  
-  text-decoration:none;  
-  font-size:12px;  
-  font-weight:700;  
+  gap:5px;  
+  font-size:10px;  
   white-space:nowrap;  
 }  
   
 .stream-dot{  
-  width:15px;  
-  height:15px;  
-  min-width:15px;  
+  width:9px;  
+  height:9px;  
+  min-width:9px;  
   border-radius:50%;  
-  display:inline-block;  
 }  
   
-.stream-item.live{  
-  color:#e60000;  
+.stream-dot.live{  
+  background:#f22;  
 }  
   
-.stream-item.live .stream-dot{  
-  background:#ff1f1f;  
-  box-shadow:0 0 9px rgba(255,31,31,.55);  
-}  
-  
-.stream-item.scheduled{  
-  color:#1877f2;  
-}  
-  
-.stream-item.scheduled .stream-dot{  
-  background:#1877f2;  
-  box-shadow:0 0 9px rgba(24,119,242,.45);  
+.stream-dot.upcoming{  
+  background:#1683ff;  
 }  
   
 .stream-none{  
-  color:#999;  
-  font-size:12px;  
-  white-space:nowrap;  
-}  
-  
-.name{  
-  font-size:18px;  
-  font-weight:800;  
-  margin-top:5px;  
-}  
-  
-.group{  
-  margin-top:5px;  
-  color:#777;  
-  font-size:13px;  
+  font-size:10px;  
+  color:#aaa;  
 }  
   
 .socials{  
   display:flex;  
   justify-content:center;  
-  gap:10px;  
-  margin-top:14px;  
+  gap:8px;  
+  margin-top:10px;  
 }  
   
 .social{  
+  width:44px;  
+  height:44px;  
+  border-radius:50%;  
+  overflow:hidden;  
+  background:#eee;  
   display:flex;  
   align-items:center;  
-  gap:6px;  
-  padding:7px 10px;  
-  border-radius:10px;  
-  background:#f5f5f5;  
-  color:#333;  
-  text-decoration:none;  
-  font-size:12px;  
-  font-weight:700;  
-}  
-  
-.social:hover{  
-  background:#e9e9e9;  
+  justify-content:center;  
 }  
   
 .social img{  
-  width:28px;  
-  height:28px;  
-  border-radius:50%;  
+  width:100%;  
+  height:100%;  
   object-fit:cover;  
 }  
   
-.date{  
-  margin-top:11px;  
-  color:#aaa;  
-  font-size:11px;  
+.hidden{  
+  display:none!important;  
 }  
   
-.no-result{  
-  grid-column:1/-1;  
-  text-align:center;  
-  padding:50px;  
-  color:#888;  
-}  
+/* ===== モーダル ===== */  
   
 .modal{  
+  display:none;  
   position:fixed;  
   inset:0;  
   background:rgba(0,0,0,.65);  
-  display:none;  
-  align-items:center;  
-  justify-content:center;  
-  padding:20px;  
-  z-index:9999;  
+  z-index:100;  
+  overflow-y:auto;  
+  padding:25px 12px;  
 }  
   
 .modal.show{  
-  display:flex;  
+  display:block;  
 }  
   
 .modal-box{  
-  width:min(800px,100%);  
-  max-height:90vh;  
-  overflow:auto;  
+  max-width:650px;  
+  margin:0 auto;  
   background:#fff;  
-  border-radius:22px;  
-  padding:22px;  
+  border-radius:20px;  
+  padding:20px;  
   position:relative;  
 }  
   
-.modal-close{  
+.close{  
   position:absolute;  
   top:10px;  
-  right:12px;  
-  width:40px;  
-  height:40px;  
+  right:14px;  
+  width:35px;  
+  height:35px;  
   border:0;  
   border-radius:50%;  
   background:#eee;  
-  font-size:26px;  
+  font-size:22px;  
   cursor:pointer;  
 }  
   
-.modal-profile{  
+.modal-head{  
   text-align:center;  
-  padding:10px 0 20px;  
+  margin-bottom:15px;  
 }  
   
-.modal-profile img{  
-  width:100px;  
-  height:100px;  
+.modal-avatar{  
+  width:110px;  
+  height:110px;  
   border-radius:50%;  
   object-fit:cover;  
+  border:4px solid transparent;  
+}  
+  
+.modal-avatar.live{  
+  border-color:#f22;  
+}  
+  
+.modal-avatar.upcoming{  
+  border-color:#1683ff;  
 }  
   
 .modal-name{  
   font-size:22px;  
-  font-weight:800;  
-  margin-top:10px;  
+  font-weight:bold;  
+  margin-top:8px;  
 }  
   
 .modal-group{  
   color:#777;  
+  font-size:12px;  
   margin-top:4px;  
 }  
   
-.modal-status{  
-  margin-top:8px;  
-  font-weight:700;  
+.section-title{  
+  font-weight:bold;  
+  font-size:15px;  
+  margin:18px 0 8px;  
 }  
   
-.modal-grid{  
-  display:grid;  
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));  
-  gap:14px;  
+.video-list{  
+  display:flex;  
+  flex-direction:column;  
+  gap:9px;  
 }  
   
-.modal-video{  
-  display:block;  
+.video-item{  
+  display:flex;  
+  gap:10px;  
+  padding:9px;  
+  background:#f2f4f7;  
+  border-radius:10px;  
   text-decoration:none;  
   color:#222;  
-  background:#f7f7f7;  
-  border-radius:14px;  
-  overflow:hidden;  
 }  
   
-.modal-video img{  
-  width:100%;  
-  aspect-ratio:16/9;  
+.video-item:hover{  
+  background:#e5e8ec;  
+}  
+  
+.video-thumb{  
+  width:130px;  
+  height:73px;  
   object-fit:cover;  
-  display:block;  
+  border-radius:7px;  
+  background:#ddd;  
+  flex-shrink:0;  
 }  
   
-.modal-video span{  
-  display:block;  
-  padding:10px;  
-  font-size:13px;  
-  font-weight:700;  
+.video-title{  
+  font-size:12px;  
+  font-weight:bold;  
+  line-height:1.4;  
 }  
   
-.modal-empty{  
-  text-align:center;  
-  padding:30px;  
+.video-date{  
+  font-size:10px;  
   color:#888;  
+  margin-top:5px;  
+}  
+  
+.empty{  
+  color:#999;  
+  font-size:12px;  
+  padding:10px;  
+  background:#f5f5f5;  
+  border-radius:8px;  
 }  
   
 .modal-links{  
   display:flex;  
   justify-content:center;  
   gap:10px;  
-  margin-top:20px;  
+  margin-top:18px;  
 }  
   
 .modal-links a{  
-  text-decoration:none;  
-  color:#333;  
-  background:#eee;  
-  padding:9px 13px;  
+  padding:9px 15px;  
   border-radius:10px;  
-  font-size:13px;  
+  text-decoration:none;  
+  color:#fff;  
+  font-size:12px;  
+  font-weight:bold;  
 }  
   
-@media(max-width:600px){
-  #members{
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    padding:0 8px 30px;
-  }
-
-  .card{
-    padding:12px 6px;
-    border-radius:14px;
-  }
-
-  .main-avatar,
-  .main-link{
-    width:85px;
-    height:85px;
-  }
-
-  .name{
-    font-size:14px;
-    line-height:1.3;
-  }
-
-  .group{
-    font-size:10px;
-  }
-
-  .profile-row{
-    display:block;
-    min-height:0;
-  }
-
-  .stream-info{
-    align-items:center;
-    margin-top:5px;
-    gap:3px;
-  }
-
-  .stream-item{
-    font-size:9px;
-    gap:4px;
-  }
-
-  .stream-dot{
-    width:8px;
-    height:8px;
-    min-width:8px;
-  }
-
-  .stream-none{
-    display:none;
-  }
-
-  .socials{
-    gap:5px;
-    margin-top:8px;
-  }
-
-  .social{
-    padding:4px;
-    font-size:0;
-  }
-
-  .social img{
-    width:25px;
-    height:25px;
-  }
-
-  .date{
-    font-size:8px;
-    margin-top:6px;
-  }
-}
+.youtube-link{  
+  background:#f00;  
+}  
+  
+.x-link{  
+  background:#111;  
+}  
+  
+@media(max-width:600px){  
+  
+  #members{  
+    grid-template-columns:repeat(2,1fr);  
+    gap:10px;  
+    padding:0 8px 30px;  
+  }  
+  
+  .card{  
+    padding:12px 6px;  
+    border-radius:14px;  
+  }  
+  
+  .main-avatar{  
+    width:85px;  
+    height:85px;  
+  }  
+  
+  .name{  
+    font-size:14px;  
+    line-height:1.3;  
+  }  
+  
+  .group{  
+    font-size:10px;  
+  }  
+  
+  .profile-row{  
+    display:block;  
+  }  
+  
+  .stream-info{  
+    align-items:center;  
+    margin-top:5px;  
+    gap:3px;  
+  }  
+  
+  .stream-item{  
+    font-size:9px;  
+    gap:4px;  
+  }  
+  
+  .stream-dot{  
+    width:8px;  
+    height:8px;  
+    min-width:8px;  
+  }  
+  
+  .stream-none{  
+    display:none;  
+  }  
+  
+  .socials{  
+    gap:5px;  
+    margin-top:8px;  
+  }  
+  
+  .social{  
+    width:40px;  
+    height:40px;  
+  }  
+  
+  .date{  
+    font-size:8px;  
+    margin-top:6px;  
+  }  
+  
+  .modal{  
+    padding:10px 7px;  
+  }  
+  
+  .modal-box{  
+    padding:16px 10px;  
+  }  
+  
+  .modal-avatar{  
+    width:90px;  
+    height:90px;  
+  }  
+  
+  .modal-name{  
+    font-size:19px;  
+  }  
+  
+  .video-thumb{  
+    width:105px;  
+    height:59px;  
+  }  
+  
+  .video-title{  
+    font-size:11px;  
+  }  
+}  
 </style>  
 </head>  
   
 <body>  
   
 <header>  
-  <h1>ホロライブJP メンバー一覧</h1>  
-  <p>YouTube・X・配信情報</p>  
-</header>  
+  
+<h1>ホロライブJP メンバー</h1>  
   
 <div class="controls">  
   
-  <input  
-    id="search"  
-    type="text"  
-    placeholder="メンバー名を検索..."  
-  >  
+<input  
+ id="search"  
+ placeholder="名前を検索"  
+>  
   
-  <div class="filters">  
+<select id="genFilter">  
   
-    <button class="filter active" data-group="all">全員</button>  
+<option value="all">すべての世代</option>  
+<option value="0期生">0期生</option>  
+<option value="1期生">1期生</option>  
+<option value="2期生">2期生</option>  
+<option value="3期生">3期生</option>  
+<option value="4期生">4期生</option>  
+<option value="5期生">5期生</option>  
+<option value="holoX">holoX</option>  
+<option value="ReGLOSS">ReGLOSS</option>  
+<option value="FLOW GLOW">FLOW GLOW</option>  
+<option value="ゲーマーズ">ゲーマーズ</option>  
   
-    <button class="filter" data-group="0期生">0期生</button>  
-    <button class="filter" data-group="1期生">1期生</button>  
-    <button class="filter" data-group="2期生">2期生</button>  
-    <button class="filter" data-group="ゲーマーズ">ゲーマーズ</button>  
-    <button class="filter" data-group="3期生">3期生</button>  
-    <button class="filter" data-group="4期生">4期生</button>  
-    <button class="filter" data-group="5期生">5期生</button>  
-    <button class="filter" data-group="6期生">6期生</button>  
-    <button class="filter" data-group="秘密結社holoX">holoX</button>  
-    <button class="filter" data-group="ReGLOSS">ReGLOSS</button>  
-    <button class="filter" data-group="FLOW GLOW">FLOW GLOW</button>  
+</select>  
   
-  </div>  
 </div>  
   
-<div id="count"></div>  
+<div id="status">  
+YouTube情報を読み込み中…  
+</div>  
+  
+</header>  
   
 <main id="members"></main>  
   
-<div class="modal" id="modal">  
-  <div class="modal-box" id="modalBox"></div>  
+  
+<!-- ===== 詳細画面 ===== -->  
+  
+<div id="modal" class="modal">  
+  
+<div class="modal-box">  
+  
+<button id="closeModal" class="close">×</button>  
+  
+<div class="modal-head">  
+  
+<img id="modalAvatar" class="modal-avatar">  
+  
+<div id="modalName" class="modal-name"></div>  
+  
+<div id="modalGroup" class="modal-group"></div>  
+  
 </div>  
+  
+  
+<div id="modalLiveSection">  
+  
+<div class="section-title">🔴 ライブ配信</div>  
+  
+<div id="modalLive"></div>  
+  
+</div>  
+  
+  
+<div id="modalUpcomingSection">  
+  
+<div class="section-title">🔵 待機中の配信</div>  
+  
+<div id="modalUpcoming"></div>  
+  
+</div>  
+  
+  
+<div class="section-title">  
+▶ 最新動画  
+</div>  
+  
+<div id="modalLatest" class="video-list"></div>  
+  
+  
+<div id="modalLinks" class="modal-links"></div>  
+  
+</div>  
+  
+</div>  
+  
   
 <script>  
   
-/* =========================  
-   ホロライブJPメンバー  
-========================= */  
+/* ==================================================  
+   Cloudflare Worker  
+   ともひさがここだけ自分のURLに変更  
+   ================================================== */  
+  
+const WORKER_URL =  
+"https://hololive-api.tomokun-kjryt.workers.dev/";  
+  
+  
+/* ==================================================  
+   メンバー  
+   ================================================== */  
   
 const members=[  
   
@@ -623,7 +660,7 @@ xURL:"https://x.com/oozorasubaru"
 name:"大神ミオ",  
 group:"ゲーマーズ",  
 groups:["ゲーマーズ"],  
-date:"2018-12-07",  
+date:"2018-12-01",  
 youtube:"OokamiMio",  
 x:"ookamimio",  
 youtubeURL:"https://www.youtube.com/@OokamiMio",  
@@ -695,7 +732,6 @@ x:"houshoumarine",
 youtubeURL:"https://www.youtube.com/@HoushouMarine",  
 xURL:"https://x.com/houshoumarine"  
 },  
-  
   
 {  
 name:"角巻わため",  
@@ -776,8 +812,8 @@ xURL:"https://x.com/omarupolka"
   
 {  
 name:"ラプラス・ダークネス",  
-group:"6期生",  
-groups:["6期生","秘密結社holoX"],  
+group:"holoX",  
+groups:["holoX"],  
 date:"2021-11-26",  
 youtube:"LaplusDarknesss",  
 x:"LaplusDarknesss",  
@@ -787,8 +823,8 @@ xURL:"https://x.com/LaplusDarknesss"
   
 {  
 name:"鷹嶺ルイ",  
-group:"6期生",  
-groups:["6期生","秘密結社holoX"],  
+group:"holoX",  
+groups:["holoX"],  
 date:"2021-11-27",  
 youtube:"TakaneLui",  
 x:"takanelui",  
@@ -798,8 +834,8 @@ xURL:"https://x.com/takanelui"
   
 {  
 name:"博衣こより",  
-group:"6期生",  
-groups:["6期生","秘密結社holoX"],  
+group:"holoX",  
+groups:["holoX"],  
 date:"2021-11-28",  
 youtube:"HakuiKoyori",  
 x:"hakuikoyori",  
@@ -807,19 +843,16 @@ youtubeURL:"https://www.youtube.com/@HakuiKoyori",
 xURL:"https://x.com/hakuikoyori"  
 },  
   
-  
 {  
 name:"風真いろは",  
-group:"6期生",  
-groups:["6期生","秘密結社holoX"],  
+group:"holoX",  
+groups:["holoX"],  
 date:"2021-11-30",  
-youtube:"kazamairoha",  
-x:"kazamairohach",  
-youtubeURL:"https://www.youtube.com/@kazamairoha",  
-xURL:"https://x.com/kazamairohach"  
+youtube:"KazamaIroha",  
+x:"kazama_iroha",  
+youtubeURL:"https://www.youtube.com/@KazamaIroha",  
+xURL:"https://x.com/kazama_iroha"  
 },  
-  
-  
   
 {  
 name:"音乃瀬奏",  
@@ -839,7 +872,7 @@ groups:["ReGLOSS"],
 date:"2023-09-09",  
 youtube:"IchijouRirika",  
 x:"ichijouririka",  
-youtubeURL:"https://www.youtube.com/@ichijouririka",  
+youtubeURL:"https://www.youtube.com/@IchijouRirika",  
 xURL:"https://x.com/ichijouririka"  
 },  
   
@@ -847,7 +880,7 @@ xURL:"https://x.com/ichijouririka"
 name:"儒烏風亭らでん",  
 group:"ReGLOSS",  
 groups:["ReGLOSS"],  
-date:"2023-09-09",  
+date:"2023-09-10",  
 youtube:"JuufuuteiRaden",  
 x:"juufuuteiraden",  
 youtubeURL:"https://www.youtube.com/@JuufuuteiRaden",  
@@ -869,33 +902,33 @@ xURL:"https://x.com/todoroki_hajime"
 name:"虎金妃笑虎",  
 group:"FLOW GLOW",  
 groups:["FLOW GLOW"],  
-date:"2024-11-07",  
+date:"2024-11-09",  
 youtube:"KoganeiNiko",  
-x:"koganeiniko",  
+x:"KoganeiNiko",  
 youtubeURL:"https://www.youtube.com/@KoganeiNiko",  
-xURL:"https://x.com/koganeiniko"  
+xURL:"https://x.com/KoganeiNiko"  
 },  
   
 {  
 name:"水宮枢",  
 group:"FLOW GLOW",  
 groups:["FLOW GLOW"],  
-date:"2024-11-08",  
+date:"2024-11-09",  
 youtube:"MizumiyaSu",  
-x:"mizumiya_su",  
+x:"Mizumiya_Su",  
 youtubeURL:"https://www.youtube.com/@MizumiyaSu",  
-xURL:"https://x.com/mizumiya_su"  
+xURL:"https://x.com/Mizumiya_Su"  
 },  
   
 {  
 name:"輪堂千速",  
 group:"FLOW GLOW",  
 groups:["FLOW GLOW"],  
-date:"2024-11-08",  
+date:"2024-11-09",  
 youtube:"RindoChihaya",  
-x:"rindochihaya",  
+x:"RindoChihaya",  
 youtubeURL:"https://www.youtube.com/@RindoChihaya",  
-xURL:"https://x.com/rindochihaya"  
+xURL:"https://x.com/RindoChihaya"  
 },  
   
 {  
@@ -909,1392 +942,225 @@ youtubeURL:"https://www.youtube.com/@KikiraraVivi",
 xURL:"https://x.com/kikiraravivi"  
 }  
   
-]  
-.map(m=>({  
-  ...m,  
-  channelId:null,  
-  uploadsId:null,  
-  avatar:null,  
-  isLive:false,  
-  isUpcoming:false,  
-  liveURL:null,  
-  upcomingURL:null,  
-  liveStartTime:null,  
-  liveThumb:null,  
-  liveTitle:null,  
-  upcomingStartTime:null,  
-  upcomingThumb:null,  
-  upcomingTitle:null,  
-  latest:[]  
-}));  
-  
-  
-/* =========================  
-   API設定  
-========================= */  
-  
-const API=[  
-"AIzaSyADas2GQ0D5EYGijpczy5qn7inexD_gsgg"
 ];  
   
   
-/* =========================  
-   キャッシュ設定  
-========================= */  
+/* ==================================================  
+   状態  
+   ================================================== */  
   
-const CACHE_PREFIX="holo_yt_";  
-  
-/* チャンネルIDは一度取得したらかなり長期間保存 */  
-const CHANNEL_ID_CACHE_MS=365*24*60*60*1000;  
-  
-/* プロフィール画像は7日ごとに更新 */  
-const AVATAR_CACHE_MS=7*24*60*60*1000;  
-  
-/*  
-  配信情報そのものは基本的にタイマーで更新するので  
-  ページを開き直した直後の無駄なAPIアクセスを減らすため  
-  365日キャッシュ。  
-*/  
-const STREAM_CACHE_MS=365*24*60*60*1000;  
-  
-/* 状態ごとのチェック間隔 */  
-  
-const CHECK_LIVE_MS=5*60*1000;  
-const CHECK_UPCOMING_MS=10*60*1000;  
-const CHECK_NONE_MS=30*60*1000;  
+members.forEach(m=>{  
+  m.info={  
+    avatar:null,  
+    isLive:false,  
+    isUpcoming:false,  
+    liveURL:null,  
+    upcomingURL:null,  
+    liveStartTime:null,  
+    upcomingStartTime:null,  
+    liveTitle:null,  
+    upcomingTitle:null,  
+    latest:[]  
+  };  
+});  
   
   
-const membersEl=document.getElementById("members");  
-const countEl=document.getElementById("count");  
-const searchEl=document.getElementById("search");  
+/* ==================================================  
+   画像  
+   ================================================== */  
   
-let currentGroup="all";  
-let refreshing=false;  
-let keyIndex=0;  
+function fallbackAvatar(name){  
   
+  const svg=  
+  "<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'>"+  
+  "<rect width='100%' height='100%' fill='#e9edf2'/>"+  
+  "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' "+  
+  "font-size='42' fill='#888'>"+  
+  name.substring(0,1)+  
+  "</text></svg>";  
   
-/* =========================  
-   APIキー確認  
-========================= */  
-  
-function hasAPI(){  
-  return API.some(k=>  
-    k &&  
-    k.startsWith("AIza") &&  
-    k.length>20  
-  );  
+  return "data:image/svg+xml;charset=UTF-8,"+  
+  encodeURIComponent(svg);  
 }  
   
   
-/* =========================  
-   LocalStorage  
-========================= */  
+function ytAvatar(handle,apiAvatar){  
   
-function lsGet(k,ttl){  
+  if(apiAvatar)return apiAvatar;  
   
-  try{  
-  
-    const x=JSON.parse(  
-      localStorage.getItem(CACHE_PREFIX+k)||"null"  
-    );  
-  
-    if(!x)return null;  
-  
-    if(ttl && Date.now()-x.t>ttl){  
-      return null;  
-    }  
-  
-    return x.v;  
-  
-  }catch(e){  
-  
-    return null;  
-  
-  }  
-  
+  return "https://unavatar.io/youtube/@"+  
+  encodeURIComponent(handle);  
 }  
   
   
-function lsSet(k,v){  
+function xAvatar(handle){  
   
-  try{  
-  
-    localStorage.setItem(  
-      CACHE_PREFIX+k,  
-      JSON.stringify({  
-        t:Date.now(),  
-        v:v  
-      })  
-    );  
-  
-  }catch(e){}  
-  
+  return "https://unavatar.io/x/"+  
+  encodeURIComponent(handle);  
 }  
   
   
-/* =========================  
-   YouTube API  
-========================= */  
+/* ==================================================  
+   日付  
+   ================================================== */  
   
-async function api(url){  
+function debutText(date){  
   
-  let last=null;  
+  const d=new Date(date+"T00:00:00");  
   
-  for(let n=0;n<API.length;n++){  
-  
-    const i=(keyIndex+n)%API.length;  
-    const k=API[i];  
-  
-    if(!k || k.includes("ここにYouTube")){  
-      continue;  
-    }  
-  
-    try{  
-  
-      const r=await fetch(  
-        url+  
-        (url.includes("?")?"&":"?")+  
-        "key="+  
-        encodeURIComponent(k)  
-      );  
-  
-      if(r.ok){  
-  
-        keyIndex=(i+1)%API.length;  
-  
-        return r.json();  
-  
-      }  
-  
-      const body=await r.text();  
-  
-      let reason="";  
-  
-      try{  
-  
-        reason=  
-          JSON.parse(body)  
-          ?.error  
-          ?.errors?.[0]  
-          ?.reason||"";  
-  
-      }catch(e){}  
-  
-      last=Error(  
-        "YouTube API "+  
-        r.status+  
-        (reason?" ("+reason+")":"")  
-      );  
-  
-      console.warn(  
-        last.message,  
-        body  
-      );  
-  
-      if(  
-        r.status!==403 &&  
-        r.status!==429  
-      ){  
-        break;  
-      }  
-  
-    }catch(e){  
-  
-      last=e;  
-  
-    }  
-  
-  }  
-  
-  throw last||Error("YouTube APIキーなし");  
-  
+  return "デビュー："+  
+    d.getFullYear()+"年"+  
+    (d.getMonth()+1)+"月"+  
+    d.getDate()+"日";  
 }  
   
   
-/* =========================  
-   チャンネル情報  
-========================= */  
+/* ==================================================  
+   相対時間  
+   ================================================== */  
   
-async function getChannelInfo(m){  
+function relativeTime(time){  
   
-  /*  
-    チャンネルIDとuploads playlist IDは  
-    一度取得したら長期間保存する。  
-  */  
+  if(!time)return "";  
   
-  const saved=lsGet(  
-    "channel_"+m.youtube,  
-    CHANNEL_ID_CACHE_MS  
-  );  
+  const diff=Date.now()-new Date(time).getTime();  
   
-  if(saved){  
+  if(diff<0){  
   
-    m.channelId=saved.id;  
-    m.uploadsId=saved.uploadsId;  
+    const min=Math.ceil(-diff/60000);  
   
-    return saved;  
+    if(min<60)return "あと"+min+"分";  
   
+    const hour=Math.floor(min/60);  
+  
+    if(hour<24)return "あと"+hour+"時間";  
+  
+    return "あと"+Math.floor(hour/24)+"日";  
   }  
   
+  const min=Math.floor(diff/60000);  
   
-  const d=await api(  
-    "https://www.googleapis.com/youtube/v3/channels"+  
-    "?part=id,snippet,contentDetails"+  
-    "&forHandle="+  
-    encodeURIComponent("@"+m.youtube)  
-  );  
+  if(min<1)return "たった今";  
   
+  if(min<60)return min+"分前";  
   
-  const c=d.items?.[0];  
+  const hour=Math.floor(min/60);  
   
-  if(!c){  
-    throw Error("channel not found");  
-  }  
+  if(hour<24)return hour+"時間前";  
+  
+  return Math.floor(hour/24)+"日前";  
+}  
   
   
-  const v={  
-    id:c.id,  
+/* ==================================================  
+   カード  
+   ================================================== */  
   
-    uploadsId:  
-      c.contentDetails  
-      ?.relatedPlaylists  
-      ?.uploads||null,  
+function createCard(m){  
   
-    avatar:  
-      c.snippet  
-      ?.thumbnails  
-      ?.high?.url||  
-      c.snippet  
-      ?.thumbnails  
-      ?.medium?.url||  
-      c.snippet  
-      ?.thumbnails  
-      ?.default?.url||  
-      null  
+  const card=document.createElement("article");  
+  
+  card.className="card";  
+  
+  card.dataset.name=m.name;  
+  
+  card.dataset.groups=m.groups.join(",");  
+  
+  card.addEventListener("click",()=>openModal(m));  
+  
+  
+  const img=document.createElement("img");  
+  
+  img.className="main-avatar";  
+  
+  img.alt=m.name;  
+  
+  img.src=fallbackAvatar(m.name);  
+  
+  img.onerror=()=>{  
+    img.onerror=null;  
+    img.src=fallbackAvatar(m.name);  
   };  
   
   
-  m.channelId=v.id;  
-  m.uploadsId=v.uploadsId;  
+  const name=document.createElement("div");  
   
+  name.className="name";  
   
-  lsSet(  
-    "channel_"+m.youtube,  
-    v  
-  );  
+  name.textContent=m.name;  
   
   
-  if(v.avatar){  
+  const group=document.createElement("div");  
   
-    lsSet(  
-      "avatar_"+m.youtube,  
-      v.avatar  
-    );  
+  group.className="group";  
   
-  }  
+  group.textContent=m.group;  
   
   
-  return v;  
+  const date=document.createElement("div");  
   
-}  
+  date.className="date";  
   
+  date.textContent=debutText(m.date);  
   
-/* =========================  
-   プロフィール画像  
-========================= */  
   
-async function refreshAvatar(m){  
+  const profile=document.createElement("div");  
   
-  const cached=lsGet(  
-    "avatar_"+m.youtube,  
-    AVATAR_CACHE_MS  
-  );  
+  profile.className="profile-row";  
   
-  if(cached){  
   
-    m.avatar=cached;  
-    return;  
+  const info=document.createElement("div");  
   
-  }  
+  info.className="stream-info";  
   
+  info.id="stream-"+m.name;  
   
-  if(!m.channelId){  
-    return;  
-  }  
   
+  const none=document.createElement("div");  
   
-  try{  
+  none.className="stream-none";  
   
-    const d=await api(  
-      "https://www.googleapis.com/youtube/v3/channels"+  
-      "?part=snippet"+  
-      "&id="+  
-      encodeURIComponent(m.channelId)  
-    );  
+  none.textContent="配信情報を確認中…";  
   
+  info.appendChild(none);  
   
-    const c=d.items?.[0];  
   
-    const a=  
-      c?.snippet?.thumbnails?.high?.url||  
-      c?.snippet?.thumbnails?.medium?.url||  
-      c?.snippet?.thumbnails?.default?.url||  
-      null;  
+  profile.appendChild(info);  
   
   
-    if(a){  
+  const socials=document.createElement("div");  
   
-      m.avatar=a;  
+  socials.className="socials";  
   
-      lsSet(  
-        "avatar_"+m.youtube,  
-        a  
-      );  
   
-    }  
+  const yt=document.createElement("a");  
   
-  }catch(e){  
+  yt.className="social";  
   
-    /*  
-      画像APIが失敗しても  
-      サイト全体は止めない。  
-    */  
+  yt.href=m.youtubeURL;  
   
-    console.warn(  
-      "プロフィール画像取得失敗:",  
-      m.name,  
-      e.message  
-    );  
+  yt.target="_blank";  
   
-  }  
+  yt.rel="noopener";  
   
-}  
+  yt.addEventListener("click",e=>e.stopPropagation());  
   
   
-/* =========================  
-   フリーチャット判定  
-========================= */  
+  const ytimg=document.createElement("img");  
   
-const isFreeChat=s=>  
-  /フリーチャット|free\s*chat|freechat/i  
-  .test(s||"");  
+  ytimg.alt="YouTube";  
   
+  ytimg.src=fallbackAvatar(m.name);  
   
-/* =========================  
-   配信情報取得  
-========================= */  
-  
-async function scanStreams(  
-  m,  
-  force=false  
-){  
-  
-  /*  
-    通常はキャッシュを使用。  
-    タイマーから呼ばれたときだけforce=true。  
-  */  
-  
-  const saved=lsGet(  
-    "stream_"+m.youtube,  
-    STREAM_CACHE_MS  
-  );  
-  
-  if(saved && !force){  
-  
-    return saved;  
-  
-  }  
-  
-  
-  if(!m.uploadsId){  
-  
-    return {  
-      live:null,  
-      upcoming:null,  
-      latest:[]  
-    };  
-  
-  }  
-  
-  
-  try{  
-  
-    /*  
-      uploads playlistを取得。  
-      search.listを使わないことで  
-      quotaを大幅に節約。  
-    */  
-  
-    const p=await api(  
-      "https://www.googleapis.com/youtube/v3/playlistItems"+  
-      "?part=contentDetails,snippet"+  
-      "&playlistId="+  
-      encodeURIComponent(m.uploadsId)+  
-      "&maxResults=50"  
-    );  
-  
-  
-    const ids=  
-      (p.items||[])  
-      .map(x=>x.contentDetails?.videoId)  
-      .filter(Boolean);  
-  
-  
-    if(!ids.length){  
-  
-      return {  
-        live:null,  
-        upcoming:null,  
-        latest:[]  
-      };  
-  
-    }  
-  
-  
-    /*  
-      最大50動画を一度にvideos.listへ。  
-      1リクエストで調査。  
-    */  
-  
-    const d=await api(  
-      "https://www.googleapis.com/youtube/v3/videos"+  
-      "?part=snippet,liveStreamingDetails,status"+  
-      "&id="+  
-      encodeURIComponent(ids.join(","))  
-    );  
-  
-  
-    const now=Date.now();  
-  
-    let live=null;  
-    let upcoming=null;  
-    let latest=[];  
-  
-  
-    for(const x of d.items||[]){  
-  
-      const st=x.status||{};  
-      const s=x.liveStreamingDetails||{};  
-      const t=x.snippet?.title||"";  
-  
-  
-      /*  
-        非公開動画は無視  
-      */  
-  
-      if(st.privacyStatus!=="public"){  
-        continue;  
-      }  
-  
-  
-      const thumb=  
-        x.snippet?.thumbnails?.high?.url||  
-        x.snippet?.thumbnails?.medium?.url||  
-        `https://i.ytimg.com/vi/${x.id}/hqdefault.jpg`;  
-  
-  
-      const v={  
-  
-        id:x.id,  
-  
-        url:  
-          `https://www.youtube.com/watch?v=${x.id}`,  
-  
-        thumb:thumb,  
-  
-        title:t,  
-  
-        publishedAt:  
-          x.snippet?.publishedAt||null  
-  
-      };  
-  
-  
-      const actual=  
-        s.actualStartTime  
-        ?Date.parse(s.actualStartTime)  
-        :0;  
-  
-      const end=  
-        s.actualEndTime  
-        ?Date.parse(s.actualEndTime)  
-        :0;  
-  
-      const scheduled=  
-        s.scheduledStartTime  
-        ?Date.parse(s.scheduledStartTime)  
-        :0;  
-  
-  
-      /*  
-        =========================  
-        現在ライブ  
-        =========================  
-      */  
-  
-      if(actual && !end){  
-  
-        if(  
-          !live ||  
-          actual>(live._start||0)  
-        ){  
-  
-          v.start=s.actualStartTime;  
-          v._start=actual;  
-  
-          live=v;  
-  
-        }  
-  
-        continue;  
-  
-      }  
-  
-  
-      /*  
-        =========================  
-        配信予定  
-        =========================  
-  
-        フリーチャットは除外  
-      */  
-  
-      if(  
-        scheduled &&  
-        !actual &&  
-        scheduled>now &&  
-        !isFreeChat(t)  
-      ){  
-  
-        if(  
-          !upcoming ||  
-          scheduled<(upcoming._start||Infinity)  
-        ){  
-  
-          v.start=s.scheduledStartTime;  
-          v._start=scheduled;  
-  
-          upcoming=v;  
-  
-        }  
-  
-        continue;  
-  
-      }  
-  
-  
-      /*  
-        =========================  
-        最新動画  
-        =========================  
-      */  
-  
-      if(  
-        !isFreeChat(t) &&  
-        (!actual || end)  
-      ){  
-  
-        latest.push(v);  
-  
-      }  
-  
-    }  
-  
-  
-    latest.sort(  
-      (a,b)=>  
-        Date.parse(b.publishedAt||0)-  
-        Date.parse(a.publishedAt||0)  
-    );  
-  
-  
-    const result={  
-  
-      live:live,  
-  
-      upcoming:upcoming,  
-  
-      latest:  
-        latest.slice(0,2)  
-  
-    };  
-  
-  
-    lsSet(  
-      "stream_"+m.youtube,  
-      result  
-    );  
-  
-  
-    return result;  
-  
-  
-  }catch(e){  
-  
-    console.warn(  
-      "配信情報取得失敗:",  
-      m.name,  
-      e.message  
-    );  
-  
-  
-    /*  
-      APIが死んでも  
-      空データを返して  
-      メンバー表示を維持。  
-    */  
-  
-    return {  
-  
-      live:null,  
-  
-      upcoming:null,  
-  
-      latest:[]  
-  
-    };  
-  
-  }  
-  
-}  
-  
-  
-/* =========================  
-   メンバー1人分読み込み  
-========================= */  
-  
-async function loadMember(  
-  m,  
-  forceStream=false  
-){  
-  
-  try{  
-  
-    const info=  
-      await getChannelInfo(m);  
-  
-  
-    /*  
-      画像取得に失敗しても  
-      続きの処理は実行。  
-    */  
-  
-    await refreshAvatar(m);  
-  
-  
-    const z=  
-      await scanStreams(  
-        m,  
-        forceStream  
-      );  
-  
-  
-    const l=z.live;  
-    const u=z.upcoming;  
-  
-  
-    m.isLive=!!l;  
-  
-    m.liveURL=  
-      l?.url||null;  
-  
-    m.liveStartTime=  
-      l?.start||null;  
-  
-    m.liveThumb=  
-      l?.thumb||null;  
-  
-    m.liveTitle=  
-      l?.title||null;  
-  
-  
-    m.isUpcoming=!!u;  
-  
-    m.upcomingURL=  
-      u?.url||null;  
-  
-    m.upcomingStartTime=  
-      u?.start||null;  
-  
-    m.upcomingThumb=  
-      u?.thumb||null;  
-  
-    m.upcomingTitle=  
-      u?.title||null;  
-  
-  
-    m.latest=  
-      z.latest||[];  
-  
-  
-  }catch(e){  
-  
-    /*  
-      ここでエラーになっても  
-      カードはそのまま表示。  
-    */  
-  
-    console.warn(  
-      "読み込み失敗:",  
-      m.name,  
-      e.message  
-    );  
-  
-  }  
-  
-}  
-  
-  
-/* =========================  
-   並列処理  
-========================= */  
-  
-async function runPool(  
-  items,  
-  worker,  
-  limit=6  
-){  
-  
-  let next=0;  
-  
-  
-  async function runner(){  
-  
-    while(true){  
-  
-      const i=next++;  
-  
-      if(i>=items.length){  
-        return;  
-      }  
-  
-      await worker(  
-        items[i]  
-      );  
-  
-    }  
-  
-  }  
-  
-  
-  await Promise.all(  
-    Array.from(  
-      {  
-        length:  
-          Math.min(  
-            limit,  
-            items.length  
-          )  
-      },  
-      runner  
-    )  
-  );  
-  
-}  
-  
-  
-/* =========================  
-   全体更新  
-========================= */  
-  
-async function refresh(  
-  force=false  
-){  
-  
-  if(  
-    refreshing ||  
-    !hasAPI()  
-  ){  
-    return;  
-  }  
-  
-  
-  refreshing=true;  
-  
-  
-  try{  
-  
-    /*  
-      forceの場合だけ  
-      配信キャッシュを削除。  
-    */  
-  
-    if(force){  
-  
-      members.forEach(m=>{  
-  
-        localStorage.removeItem(  
-          CACHE_PREFIX+  
-          "stream_"+  
-          m.youtube  
-        );  
-  
-      });  
-  
-    }  
-  
-  
-    await runPool(  
-  
-      members,  
-  
-      async m=>{  
-  
-        await loadMember(  
-          m,  
-          force  
-        );  
-  
-        scheduleNext(m);  
-  
-        render();  
-  
-      },  
-  
-      6  
-  
-    );  
-  
-  
-    render();  
-  
-  
-  }finally{  
-  
-    refreshing=false;  
-  
-  }  
-  
-}  
-  
-  
-/* =========================  
-   メンバーごとの更新予約  
-========================= */  
-  
-function scheduleNext(m){  
-  
-  clearTimeout(  
-    m._timer  
-  );  
-  
-  
-  let delay;  
-  
-  
-  if(m.isLive){  
-  
-    /*  
-      ライブ中は5分ごと  
-    */  
-  
-    delay=  
-      CHECK_LIVE_MS;  
-  
-  }else if(m.isUpcoming){  
-  
-    /*  
-      配信予定がある場合10分ごと  
-    */  
-  
-    delay=  
-      CHECK_UPCOMING_MS;  
-  
-  }else{  
-  
-    /*  
-      何もない人は30分ごと  
-    */  
-  
-    delay=  
-      CHECK_NONE_MS;  
-  
-  }  
-  
-  
-  m._timer=setTimeout(  
-    async()=>{  
-  
-      if(!hasAPI()){  
-        return;  
-      }  
-  
-  
-      await loadMember(  
-        m,  
-        true  
-      );  
-  
-  
-      scheduleNext(m);  
-  
-      render();  
-  
-    },  
-    delay  
-  );  
-  
-}  
-  
-  
-/* =========================  
-   フォールバック画像  
-========================= */  
-  
-function fallback(t){  
-  
-  const text=  
-    [...t]  
-    .slice(0,2)  
-    .join("");  
-  
-  
-  const s=`  
-  
-<svg  
-xmlns="http://www.w3.org/2000/svg"  
-width="200"  
-height="200"  
-viewBox="0 0 200 200">  
-  
-<rect  
-width="100%"  
-height="100%"  
-rx="100"  
-fill="#e9e9e9"/>  
-  
-<text  
-x="50%"  
-y="54%"  
-dominant-baseline="middle"  
-text-anchor="middle"  
-font-family="sans-serif"  
-font-size="52"  
-fill="#777">  
-  
-${text}  
-  
-</text>  
-  
-</svg>  
-  
-`;  
-  
-  
-  return(  
-    "data:image/svg+xml;charset=UTF-8,"+  
-    encodeURIComponent(s)  
-  );  
-  
-}  
-  
-  
-/* =========================  
-   画像表示  
-========================= */  
-  
-function img(  
-  src,  
-  alt,  
-  extra=[]  
-){  
-  
-  const i=  
-    document.createElement("img");  
-  
-  
-  /*  
-    画像URLを順番に試す  
-  */  
-  
-  const list=[  
-    src,  
-    ...extra  
-  ].filter(Boolean);  
-  
-  
-  let n=0;  
-  
-  
-  i.alt=alt;  
-  
-  
-  i.src=  
-    list[n]||  
-    fallback(alt);  
-  
-  
-  i.onerror=()=>{  
-  
-    n++;  
-  
-  
-    if(n<list.length){  
-  
-      i.src=list[n];  
-  
-    }else{  
-  
-      i.onerror=null;  
-  
-      i.src=fallback(alt);  
-  
-    }  
-  
+  ytimg.onerror=()=>{  
+    ytimg.onerror=null;  
+    ytimg.src=fallbackAvatar(m.name);  
   };  
   
+  yt.appendChild(ytimg);  
   
-  return i;  
   
-}  
-  
-  
-/* =========================  
-   YouTubeプロフィール画像  
-========================= */  
-  
-function ytAvatar(m){  
-  
-  return img(  
-  
-    m.avatar||  
-    `https://unavatar.io/youtube/${m.youtube}`,  
-  
-    m.name,  
-  
-    [  
-  
-      `https://unavatar.io/youtube/@${m.youtube}`  
-  
-    ]  
-  
-  );  
-  
-}  
-  
-  
-/* =========================  
-   時間表示  
-========================= */  
-  
-function rt(  
-  t,  
-  live  
-){  
-  
-  if(!t){  
-    return "";  
-  }  
-  
-  
-  const n=  
-    live  
-    ?Date.now()-Date.parse(t)  
-    :Date.parse(t)-Date.now();  
-  
-  
-  const m=  
-    live  
-    ?Math.floor(  
-        Math.max(0,n)/60000  
-      )  
-    :Math.ceil(  
-        Math.max(0,n)/60000  
-      );  
-  
-  
-  if(live){  
-  
-    if(m<1){  
-      return "開始直後";  
-    }  
-  
-    if(m<60){  
-  
-      return `${m}分前に開始`;  
-  
-    }  
-  
-    return(  
-      `${Math.floor(m/60)}時間`+  
-      `${m%60?m%60+"分":""}`+  
-      "前に開始"  
-    );  
-  
-  }  
-  
-  
-  if(m<1){  
-    return "まもなく開始";  
-  }  
-  
-  
-  if(m<60){  
-  
-    return `${m}分後に開始`;  
-  
-  }  
-  
-  
-  return(  
-    `${Math.floor(m/60)}時間`+  
-    `${m%60?m%60+"分":""}`+  
-    "後に開始"  
-  );  
-  
-}  
-  
-  
-/* =========================  
-   メンバーカード  
-========================= */  
-  
-function card(m){  
-  
-  const c=  
-    document.createElement("article");  
-  
-  c.className="card";  
-  
-  
-  const row=  
-    document.createElement("div");  
-  
-  row.className="profile-row";  
-  
-  
-  /*  
-    =========================  
-    メインプロフィール画像  
-    =========================  
-  */  
-  
-  const a=  
-    ytAvatar(m);  
-  
-  
-  a.className="main-avatar";  
-  
-  
-  if(m.isLive){  
-  
-    a.classList.add("live");  
-  
-  }else if(m.isUpcoming){  
-  
-    a.classList.add("scheduled");  
-  
-  }  
-  
-  
-  /*  
-    ライブならライブへ  
-    予定なら待機所へ  
-  */  
-  
-  const l=  
-    document.createElement("a");  
-  
-  l.className="main-link";  
-  
-  
-  if(m.isLive && m.liveURL){  
-  
-    l.href=m.liveURL;  
-  
-    l.target="_blank";  
-  
-    l.rel="noopener noreferrer";  
-  
-  }else if(  
-    m.isUpcoming &&  
-    m.upcomingURL  
-  ){  
-  
-    l.href=m.upcomingURL;  
-  
-    l.target="_blank";  
-  
-    l.rel="noopener noreferrer";  
-  
-  }else{  
-  
-    l.href="javascript:void(0)";  
-  
-  }  
-  
-  
-  l.appendChild(a);  
-  
-  row.appendChild(l);  
-  
-  
-  /*  
-    =========================  
-    右側の配信情報  
-    =========================  
-  */  
-  
-  const si=  
-    document.createElement("div");  
-  
-  si.className="stream-info";  
-  
-  
-  if(m.isLive){  
-  
-    const x=  
-      document.createElement("span");  
-  
-    x.className=  
-      "stream-item live";  
-  
-  
-    x.innerHTML=`  
-  
-      <i class="stream-dot"></i>  
-  
-      <span>  
-        ${rt(m.liveStartTime,true)}  
-      </span>  
-  
-    `;  
-  
-  
-    si.appendChild(x);  
-  
-  }  
-  
-  
-  if(m.isUpcoming){  
-  
-    const x=  
-      document.createElement("span");  
-  
-    x.className=  
-      "stream-item scheduled";  
-  
-  
-    x.innerHTML=`  
-  
-      <i class="stream-dot"></i>  
-  
-      <span>  
-        ${rt(m.upcomingStartTime,false)}  
-      </span>  
-  
-    `;  
-  
-  
-    si.appendChild(x);  
-  
-  }  
-  
-  
-  if(  
-    !m.isLive &&  
-    !m.isUpcoming  
-  ){  
-  
-    const x=  
-      document.createElement("span");  
-  
-    x.className=  
-      "stream-none";  
-  
-    x.textContent=  
-      "配信情報なし";  
-  
-    si.appendChild(x);  
-  
-  }  
-  
-  
-  row.appendChild(si);  
-  
-  c.appendChild(row);  
-  
-  
-  /*  
-    =========================  
-    名前・世代  
-    =========================  
-  */  
-  
-  const n=  
-    document.createElement("div");  
-  
-  n.className="name";  
-  
-  n.textContent=m.name;  
-  
-  
-  const g=  
-    document.createElement("div");  
-  
-  g.className="group";  
-  
-  g.textContent=m.group;  
-  
-  
-  c.append(  
-    n,  
-    g  
-  );  
-  
-  
-  /*  
-    =========================  
-    SNS  
-    =========================  
-  */  
-  
-  const so=  
-    document.createElement("div");  
-  
-  so.className="socials";  
-  
-  
-  /*  
-    YouTube  
-  */  
-  
-  const y=  
-    document.createElement("a");  
-  
-  y.className="social";  
-  
-  y.href=m.youtubeURL;  
-  
-  y.target="_blank";  
-  
-  y.rel=  
-    "noopener noreferrer";  
-  
-  y.onclick=  
-    e=>e.stopPropagation();  
-  
-  
-  y.append(  
-  
-    ytAvatar(m),  
-  
-    Object.assign(  
-      document.createElement("span"),  
-      {  
-        textContent:"YouTube"  
-      }  
-    )  
-  
-  );  
-  
-  
-  /*  
-    X  
-  */  
-  
-  const x=  
-    document.createElement("a");  
+  const x=document.createElement("a");  
   
   x.className="social";  
   
@@ -2302,372 +1168,636 @@ function card(m){
   
   x.target="_blank";  
   
-  x.rel=  
-    "noopener noreferrer";  
+  x.rel="noopener";  
   
-  x.onclick=  
-    e=>e.stopPropagation();  
+  x.addEventListener("click",e=>e.stopPropagation());  
   
   
-  x.append(  
+  const ximg=document.createElement("img");  
   
-    img(  
-      `https://unavatar.io/x/${m.x}`,  
-      "X"  
-    ),  
+  ximg.alt="X";  
   
-    Object.assign(  
-      document.createElement("span"),  
-      {  
-        textContent:"X"  
-      }  
-    )  
+  ximg.src=xAvatar(m.x);  
   
-  );  
+  ximg.onerror=()=>{  
+    ximg.onerror=null;  
+    ximg.src=fallbackAvatar("X");  
+  };  
+  
+  x.appendChild(ximg);  
   
   
-  so.append(  
-    y,  
-    x  
-  );  
+  socials.appendChild(yt);  
   
-  c.appendChild(so);  
+  socials.appendChild(x);  
   
   
-  /*  
-    初配信日  
-  */  
+  card.appendChild(img);  
   
-  const dt=  
-    document.createElement("div");  
+  card.appendChild(name);  
   
-  dt.className="date";  
+  card.appendChild(group);  
   
-  dt.textContent=  
-    "初配信: "+  
-    m.date.replaceAll("-","/");  
+  card.appendChild(date);  
   
+  card.appendChild(profile);  
   
-  c.appendChild(dt);  
+  card.appendChild(socials);  
   
   
-  /*  
-    カードクリックで詳細  
-  */  
-  
-  c.addEventListener(  
-    "click",  
-    ()=>openModal(m)  
-  );  
+  m._card={  
+    card,  
+    img,  
+    ytimg,  
+    info  
+  };  
   
   
-  /*  
-    SNSクリック時は  
-    カード詳細を開かない  
-  */  
+  return card;  
+}  
   
-  return c;  
+  
+members.forEach(m=>{  
+  document.getElementById("members").appendChild(createCard(m));  
+});  
+  
+  
+/* ==================================================  
+   カード更新  
+   ================================================== */  
+  
+function updateCard(m){  
+  
+  const info=m.info;  
+  
+  const img=m._card.img;  
+  
+  const stream=m._card.info;  
+  
+  
+  img.classList.remove("live","upcoming");  
+  
+  
+  if(info.avatar){  
+  
+    img.src=info.avatar;  
+  
+  }else{  
+  
+    img.src=ytAvatar(m.youtube,null);  
+  
+  }  
+  
+  
+  m._card.ytimg.src=  
+    ytAvatar(m.youtube,info.avatar);  
+  
+  
+  stream.innerHTML="";  
+  
+  
+  if(info.isLive){  
+  
+    img.classList.add("live");  
+  
+  
+    const live=document.createElement("div");  
+  
+    live.className="stream-item";  
+  
+    live.innerHTML=  
+      "<span class='stream-dot live'></span>"+  
+      "LIVE・"+relativeTime(info.liveStartTime);  
+  
+    stream.appendChild(live);  
+  
+  }  
+  
+  
+  if(info.isUpcoming){  
+  
+    if(!info.isLive){  
+  
+      img.classList.add("upcoming");  
+  
+    }  
+  
+  
+    const upcoming=document.createElement("div");  
+  
+    upcoming.className="stream-item";  
+  
+    upcoming.innerHTML=  
+      "<span class='stream-dot upcoming'></span>"+  
+      "待機・"+relativeTime(info.upcomingStartTime);  
+  
+    stream.appendChild(upcoming);  
+  
+  }  
+  
+  
+  if(!info.isLive && !info.isUpcoming){  
+  
+    const none=document.createElement("div");  
+  
+    none.className="stream-none";  
+  
+    none.textContent="配信情報なし";  
+  
+    stream.appendChild(none);  
+  
+  }  
   
 }  
   
   
-/* =========================  
-   動画表示  
-========================= */  
+/* ==================================================  
+   Workerから取得  
+   ================================================== */  
   
-function videoBox(  
-  v,  
-  label  
-){  
+async function refreshFromWorker(){  
   
-  const a=  
-    document.createElement("a");  
+  const status=document.getElementById("status");  
   
-  a.className="modal-video";  
+  status.textContent=  
+    "YouTube情報を取得中…";  
   
-  a.href=v.url;  
+  
+  try{  
+  
+    const handles=members  
+      .map(m=>m.youtube)  
+      .join(",");  
+  
+  
+    const url=  
+      WORKER_URL+  
+      "?handles="+  
+      encodeURIComponent(handles);  
+  
+  
+    const response=  
+      await fetch(url,{  
+        method:"GET",  
+        cache:"no-store"  
+      });  
+  
+  
+    if(!response.ok){  
+  
+      throw new Error(  
+        "Worker HTTP "+response.status  
+      );  
+  
+    }  
+  
+  
+    const data=  
+      await response.json();  
+  
+  
+    if(!data.ok){  
+  
+      throw new Error(  
+        data.error||  
+        "Workerから正常なデータが返ってきませんでした"  
+      );  
+  
+    }  
+  
+  
+    for(const m of members){  
+  
+      const info=  
+        data.members?.[m.youtube];  
+  
+  
+      if(!info)continue;  
+  
+  
+      m.info={  
+        avatar:info.avatar||null,  
+  
+        isLive:!!info.isLive,  
+  
+        isUpcoming:!!info.isUpcoming,  
+  
+        liveURL:info.liveURL||null,  
+  
+        upcomingURL:info.upcomingURL||null,  
+  
+        liveStartTime:  
+          info.liveStartTime||null,  
+  
+        upcomingStartTime:  
+          info.upcomingStartTime||null,  
+  
+        liveTitle:  
+          info.liveTitle||null,  
+  
+        upcomingTitle:  
+          info.upcomingTitle||null,  
+  
+        latest:  
+          Array.isArray(info.latest)  
+            ?info.latest.slice(0,2)  
+            :[]  
+      };  
+  
+  
+      updateCard(m);  
+  
+    }  
+  
+  
+    status.textContent=  
+      "YouTube情報を取得しました"+  
+      (data.cached?"（キャッシュ）":"");  
+  
+  
+  }catch(error){  
+  
+    console.error(error);  
+  
+    status.textContent=  
+      "YouTube情報を取得できませんでした";  
+  
+  }  
+  
+}  
+  
+  
+/* ==================================================  
+   検索・フィルター  
+   ================================================== */  
+  
+function filter(){  
+  
+  const q=  
+    document  
+      .getElementById("search")  
+      .value  
+      .toLowerCase();  
+  
+  
+  const gen=  
+    document  
+      .getElementById("genFilter")  
+      .value;  
+  
+  
+  document  
+    .querySelectorAll(".card")  
+    .forEach(card=>{  
+  
+      const name=  
+        card.dataset.name  
+          .toLowerCase()  
+          .includes(q);  
+  
+  
+      const groups=  
+        card.dataset.groups  
+          .split(",");  
+  
+  
+      const generation=  
+        gen==="all"||  
+        groups.includes(gen);  
+  
+  
+      card.classList.toggle(  
+        "hidden",  
+        !(name&&generation)  
+      );  
+  
+    });  
+  
+}  
+  
+  
+document  
+  .getElementById("search")  
+  .addEventListener("input",filter);  
+  
+  
+document  
+  .getElementById("genFilter")  
+  .addEventListener("change",filter);  
+  
+  
+/* ==================================================  
+   モーダル  
+   ================================================== */  
+  
+function videoItem(video){  
+  
+  const a=document.createElement("a");  
+  
+  a.className="video-item";  
+  
+  a.href=video.url||  
+    "https://www.youtube.com/watch?v="+video.videoId;  
   
   a.target="_blank";  
   
-  a.rel=  
-    "noopener noreferrer";  
+  a.rel="noopener";  
   
   
-  a.innerHTML=`  
+  const img=document.createElement("img");  
   
-    <img  
-      src="${v.thumb}"  
-      alt=""  
-    >  
+  img.className="video-thumb";  
   
-    <span>  
-      ${label}：  
-      ${v.title||""}  
-    </span>  
+  img.src=  
+    video.thumb||  
+    fallbackAvatar("▶");  
   
-  `;  
+  img.onerror=()=>{  
+    img.onerror=null;  
+    img.src=fallbackAvatar("▶");  
+  };  
+  
+  
+  const text=document.createElement("div");  
+  
+  
+  const title=document.createElement("div");  
+  
+  title.className="video-title";  
+  
+  title.textContent=  
+    video.title||  
+    "動画";  
+  
+  
+  text.appendChild(title);  
+  
+  
+  if(video.publishedAt){  
+  
+    const date=document.createElement("div");  
+  
+    date.className="video-date";  
+  
+    const d=  
+      new Date(video.publishedAt);  
+  
+    date.textContent=  
+      d.getFullYear()+"年"+  
+      (d.getMonth()+1)+"月"+  
+      d.getDate()+"日";  
+  
+    text.appendChild(date);  
+  
+  }  
+  
+  
+  a.appendChild(img);  
+  
+  a.appendChild(text);  
   
   
   return a;  
-  
 }  
   
-  
-/* =========================  
-   モーダル  
-========================= */  
   
 function openModal(m){  
   
   const modal=  
     document.getElementById("modal");  
   
-  const box=  
-    document.getElementById("modalBox");  
+  
+  const info=m.info;  
   
   
-  box.innerHTML="";  
+  document  
+    .getElementById("modalName")  
+    .textContent=m.name;  
   
   
-  /*  
-    閉じるボタン  
-  */  
-  
-  const close=  
-    document.createElement("button");  
-  
-  close.className=  
-    "modal-close";  
-  
-  close.textContent="×";  
-  
-  close.onclick=()=>  
-    modal.classList.remove("show");  
+  document  
+    .getElementById("modalGroup")  
+    .textContent=  
+      m.group+  
+      "　"+  
+      debutText(m.date);  
   
   
-  box.appendChild(close);  
+  const avatar=  
+    document.getElementById("modalAvatar");  
   
   
-  /*  
-    プロフィール  
-  */  
-  
-  const p=  
-    document.createElement("div");  
-  
-  p.className=  
-    "modal-profile";  
+  avatar.className="modal-avatar";  
   
   
-  p.appendChild(  
-    ytAvatar(m)  
-  );  
+  if(info.isLive){  
+  
+    avatar.classList.add("live");  
+  
+  }else if(info.isUpcoming){  
+  
+    avatar.classList.add("upcoming");  
+  
+  }  
   
   
-  const nm=  
-    document.createElement("div");  
-  
-  nm.className=  
-    "modal-name";  
-  
-  nm.textContent=m.name;  
+  avatar.src=  
+    info.avatar||  
+    ytAvatar(m.youtube,null);  
   
   
-  p.appendChild(nm);  
+  avatar.onerror=()=>{  
+    avatar.onerror=null;  
+    avatar.src=fallbackAvatar(m.name);  
+  };  
   
   
-  const gr=  
-    document.createElement("div");  
+  /* ===== ライブ ===== */  
   
-  gr.className=  
-    "modal-group";  
+  const liveSection=  
+    document.getElementById(  
+      "modalLiveSection"  
+    );  
   
-  gr.textContent=m.group;  
-  
-  
-  p.appendChild(gr);  
-  
-  
-  const st=  
-    document.createElement("div");  
-  
-  st.className=  
-    "modal-status";  
+  const liveBox=  
+    document.getElementById(  
+      "modalLive"  
+    );  
   
   
-  if(m.isLive){  
+  liveBox.innerHTML="";  
   
-    st.textContent=  
-      "🔴 LIVE配信中";  
   
-  }else if(m.isUpcoming){  
+  if(info.isLive&&info.liveURL){  
   
-    st.textContent=  
-      "🔵 次回配信予定";  
+    liveSection.style.display="block";  
+  
+  
+    const v=videoItem({  
+  
+      videoId:  
+        info.liveURL  
+          .split("v=")[1]||  
+        "",  
+  
+      url:info.liveURL,  
+  
+      title:  
+        info.liveTitle||  
+        "現在ライブ中",  
+  
+      thumb:  
+        info.liveThumb||  
+        info.avatar  
+  
+    });  
+  
+  
+    liveBox.appendChild(v);  
   
   }else{  
   
-    st.textContent=  
-      "📺 直近の動画";  
+    liveSection.style.display="none";  
   
   }  
   
   
-  p.appendChild(st);  
+  /* ===== 待機 ===== */  
   
-  box.appendChild(p);  
-  
-  
-  /*  
-    動画一覧  
-  */  
-  
-  const grid=  
-    document.createElement("div");  
-  
-  grid.className=  
-    "modal-grid";  
-  
-  
-  if(  
-    m.isLive &&  
-    m.liveThumb  
-  ){  
-  
-    grid.appendChild(  
-  
-      videoBox(  
-  
-        {  
-          url:m.liveURL,  
-          thumb:m.liveThumb,  
-          title:m.liveTitle  
-        },  
-  
-        "🔴 ライブ"  
-  
-      )  
-  
+  const upcomingSection=  
+    document.getElementById(  
+      "modalUpcomingSection"  
     );  
   
-  }  
-  
-  
-  if(  
-    m.upcomingThumb &&  
-    m.upcomingURL  
-  ){  
-  
-    grid.appendChild(  
-  
-      videoBox(  
-  
-        {  
-          url:m.upcomingURL,  
-          thumb:m.upcomingThumb,  
-          title:m.upcomingTitle  
-        },  
-  
-        "🔵 配信予定"  
-  
-      )  
-  
+  const upcomingBox=  
+    document.getElementById(  
+      "modalUpcoming"  
     );  
   
-  }  
+  
+  upcomingBox.innerHTML="";  
   
   
   if(  
-    !m.isLive &&  
-    !m.isUpcoming  
+    info.isUpcoming&&  
+    info.upcomingURL  
   ){  
   
-    (m.latest||[])  
-      .slice(0,2)  
-      .forEach(  
-        (v,i)=>{  
+    upcomingSection.style.display="block";  
   
-          grid.appendChild(  
   
-            videoBox(  
-              v,  
-              `▶ 直近${i+1}本目`  
-            )  
+    upcomingBox.appendChild(  
+      videoItem({  
   
-          );  
+        videoId:  
+          info.upcomingURL  
+            .split("v=")[1]||  
+          "",  
   
-        }  
+        url:info.upcomingURL,  
+  
+        title:  
+          info.upcomingTitle||  
+          "待機中の配信",  
+  
+        thumb:  
+          info.upcomingThumb||  
+          info.avatar  
+  
+      })  
+    );  
+  
+  }else{  
+  
+    upcomingSection.style.display="none";  
+  
+  }  
+  
+  
+  /* ===== 最新動画2本 ===== */  
+  
+  const latestBox=  
+    document.getElementById(  
+      "modalLatest"  
+    );  
+  
+  
+  latestBox.innerHTML="";  
+  
+  
+  const latest=  
+    Array.isArray(info.latest)  
+      ?info.latest.slice(0,2)  
+      :[];  
+  
+  
+  if(latest.length){  
+  
+    latest.forEach(video=>{  
+  
+      latestBox.appendChild(  
+        videoItem(video)  
       );  
   
-  }  
-  
-  
-  if(grid.children.length){  
-  
-    box.appendChild(grid);  
+    });  
   
   }else{  
   
-    const e=  
+    const empty=  
       document.createElement("div");  
   
-    e.className=  
-      "modal-empty";  
+    empty.className="empty";  
   
-    e.textContent=  
-      "表示できる動画がありません";  
+    empty.textContent=  
+      "最新動画を取得できませんでした";  
   
-    box.appendChild(e);  
+    latestBox.appendChild(empty);  
   
   }  
   
   
-  /*  
-    SNSリンク  
-  */  
+  /* ===== プロフィール ===== */  
   
   const links=  
-    document.createElement("div");  
+    document.getElementById(  
+      "modalLinks"  
+    );  
   
-  links.className=  
-    "modal-links";  
+  
+  links.innerHTML="";  
   
   
-  const ya=  
+  const yt=  
     document.createElement("a");  
   
-  ya.href=m.youtubeURL;  
+  yt.className="youtube-link";  
   
-  ya.target="_blank";  
+  yt.href=m.youtubeURL;  
   
-  ya.rel=  
-    "noopener noreferrer";  
+  yt.target="_blank";  
   
-  ya.textContent=  
-    "YouTubeチャンネル";  
+  yt.rel="noopener";  
+  
+  yt.textContent="YouTube";  
   
   
-  const xa=  
+  const x=  
     document.createElement("a");  
   
-  xa.href=m.xURL;  
+  x.className="x-link";  
   
-  xa.target="_blank";  
+  x.href=m.xURL;  
   
-  xa.rel=  
-    "noopener noreferrer";  
+  x.target="_blank";  
   
-  xa.textContent=  
-    "Xプロフィール";  
+  x.rel="noopener";  
   
-  
-  links.append(  
-    ya,  
-    xa  
-  );  
+  x.textContent="X";  
   
   
-  box.appendChild(links);  
+  links.appendChild(yt);  
+  
+  links.appendChild(x);  
   
   
   modal.classList.add("show");  
@@ -2675,227 +1805,65 @@ function openModal(m){
 }  
   
   
-/* =========================  
-   表示  
-========================= */  
-  
-function render(){  
-  
-  const k=  
-    searchEl.value  
-    .trim()  
-    .toLowerCase();  
-  
-  
-  const f=  
-    members.filter(  
-  
-      m=>  
-        (  
-          currentGroup==="all"||  
-          m.groups.includes(currentGroup)  
-        )&&  
-        m.name  
-          .toLowerCase()  
-          .includes(k)  
-  
-    );  
-  
-  
-  membersEl.innerHTML="";  
-  
-  
-  countEl.textContent=  
-    `${f.length}人表示`;  
-  
-  
-  if(!f.length){  
-  
-    const n=  
-      document.createElement("div");  
-  
-    n.className="no-result";  
-  
-    n.textContent=  
-      "😢 該当するメンバーが見つかりません";  
-  
-  
-    membersEl.appendChild(n);  
-  
-    return;  
-  
-  }  
-  
-  
-  f.forEach(  
-    m=>  
-      membersEl.appendChild(  
-        card(m)  
-      )  
+document  
+  .getElementById("closeModal")  
+  .addEventListener(  
+    "click",  
+    ()=>{  
+      document  
+        .getElementById("modal")  
+        .classList.remove("show");  
+    }  
   );  
   
-}  
-  
-  
-/* =========================  
-   フィルター  
-========================= */  
   
 document  
-.querySelectorAll(".filter")  
-.forEach(  
+  .getElementById("modal")  
+  .addEventListener(  
+    "click",  
+    e=>{  
+      if(e.target.id==="modal"){  
   
-  b=>  
-  
-    b.addEventListener(  
-      "click",  
-      ()=>{  
-  
-        document  
-        .querySelectorAll(".filter")  
-        .forEach(  
-          x=>  
-            x.classList.remove("active")  
-        );  
-  
-  
-        b.classList.add("active");  
-  
-  
-        currentGroup=  
-          b.dataset.group;  
-  
-  
-        render();  
+        e.currentTarget  
+          .classList  
+          .remove("show");  
   
       }  
-    )  
-  
-);  
-  
-  
-/* =========================  
-   検索  
-========================= */  
-  
-searchEl.addEventListener(  
-  "input",  
-  render  
-);  
-  
-  
-/* =========================  
-   モーダル外クリック  
-========================= */  
-  
-document  
-.getElementById("modal")  
-.addEventListener(  
-  "click",  
-  e=>{  
-  
-    if(  
-      e.target.id==="modal"  
-    ){  
-  
-      e.currentTarget  
-       .classList  
-       .remove("show");  
-  
     }  
-  
-  }  
-);  
+  );  
   
   
-/* =========================  
-   起動  
-========================= */  
+/* ==================================================  
+   時間表示を30秒ごと更新  
+   ライブ終了後はWorkerの最新状態を取得する  
+   ================================================== */  
   
-/*  
-  APIがなくても  
-  メンバー一覧だけは必ず表示。  
-*/  
+setInterval(()=>{  
   
-render();  
+  members.forEach(m=>{  
   
+    if(!m.info)return;  
   
-/*  
-  APIキーが入っている場合のみ  
-  YouTube情報を取得。  
-*/  
+    updateCard(m);  
   
-if(hasAPI()){  
+  });  
   
-  refresh();  
-  
-}  
+},30000);  
   
   
-/* =========================  
-   時間表示だけ30秒ごと更新  
-========================= */  
+/* ==================================================  
+   15分ごとにWorkerへ確認  
+   ================================================== */  
   
 setInterval(  
-  
-  ()=>{  
-  
-    document  
-    .querySelectorAll(  
-      ".stream-item.live span,"+  
-      ".stream-item.scheduled span"  
-    )  
-    .forEach(e=>{  
-  
-      const c=  
-        e.closest(".card");  
-  
-      const name=  
-        c  
-        ?.querySelector(".name")  
-        ?.textContent;  
-  
-  
-      const m=  
-        members.find(  
-          x=>x.name===name  
-        );  
-  
-  
-      if(!m){  
-        return;  
-      }  
-  
-  
-      if(  
-        e.parentElement  
-         .classList  
-         .contains("live")  
-      ){  
-  
-        e.textContent=  
-          rt(  
-            m.liveStartTime,  
-            true  
-          );  
-  
-      }else{  
-  
-        e.textContent=  
-          rt(  
-            m.upcomingStartTime,  
-            false  
-          );  
-  
-      }  
-  
-    });  
-  
-  },  
-  
-  30000  
-  
+  refreshFromWorker,  
+  15*60*1000  
 );  
+  
+  
+/* 初回 */  
+  
+refreshFromWorker();  
   
 </script>  
   
