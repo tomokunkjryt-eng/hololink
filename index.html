@@ -2043,22 +2043,242 @@ function escapeHTML(
 function openModal(m){
 
   const modal =
-    document.getElementById(
-      "modal"
-    );
+    document.getElementById("modal");
 
   const content =
-    document.getElementById(
-      "modalContent"
-    );
-
+    document.getElementById("modalContent");
 
   const info =
-    m.info;
-
+    m.info || {};
 
   let html = "";
 
+
+  // =========================
+  // プロフィール
+  // =========================
+
+  let avatarClass = "";
+
+  if(info.isLive){
+    avatarClass = "live";
+  }
+  else if(info.isUpcoming){
+    avatarClass = "upcoming";
+  }
+
+
+  const avatar =
+    info.avatar ||
+    "https://unavatar.io/youtube/" +
+    encodeURIComponent(m.youtube);
+
+
+  html +=
+    '<div class="modal-head">' +
+
+      '<img class="modal-avatar ' +
+      avatarClass +
+      '" src="' +
+      escapeHTML(avatar) +
+      '" alt="' +
+      escapeHTML(m.name) +
+      '">' +
+
+      '<div class="modal-name">' +
+      escapeHTML(m.name) +
+      '</div>' +
+
+      '<div class="modal-group">' +
+      escapeHTML(m.group) +
+      '</div>' +
+
+    '</div>';
+
+
+  // =========================
+  // LIVE
+  // =========================
+
+  if(
+    info.isLive &&
+    info.liveURL
+  ){
+
+    html +=
+      '<div class="section-title">' +
+      '🔴 LIVE配信中' +
+      '</div>';
+
+    html +=
+      '<a class="stream-card live" href="' +
+      escapeHTML(info.liveURL) +
+      '" target="_blank" rel="noopener">' +
+
+        (
+          info.liveThumb
+          ?
+          '<img class="stream-thumb" src="' +
+          escapeHTML(info.liveThumb) +
+          '" alt="">'
+          :
+          ''
+        ) +
+
+        '<div class="stream-title">' +
+        escapeHTML(
+          info.liveTitle ||
+          "LIVE配信中"
+        ) +
+        '</div>' +
+
+      '</a>';
+  }
+
+
+  // =========================
+  // 次の配信
+  // =========================
+
+  if(
+    info.isUpcoming &&
+    info.upcomingURL
+  ){
+
+    html +=
+      '<div class="section-title">' +
+      '🔵 次の待機枠' +
+      '</div>';
+
+    html +=
+      '<a class="stream-card upcoming" href="' +
+      escapeHTML(info.upcomingURL) +
+      '" target="_blank" rel="noopener">' +
+
+        (
+          info.upcomingThumb
+          ?
+          '<img class="stream-thumb" src="' +
+          escapeHTML(info.upcomingThumb) +
+          '" alt="">'
+          :
+          ''
+        ) +
+
+        '<div class="stream-title">' +
+        escapeHTML(
+          info.upcomingTitle ||
+          "ライブ待機中"
+        ) +
+        '</div>' +
+
+      '</a>';
+  }
+
+
+  // =========================
+  // 直近の動画
+  // =========================
+
+  if(
+    Array.isArray(info.latest) &&
+    info.latest.length > 0
+  ){
+
+    html +=
+      '<div class="section-title">' +
+      '▶ 直近の動画' +
+      '</div>';
+
+
+    info.latest
+      .slice(0,2)
+      .forEach(video => {
+
+        if(!video || !video.url){
+          return;
+        }
+
+
+        html +=
+          '<a class="video-item" href="' +
+          escapeHTML(video.url) +
+          '" target="_blank" rel="noopener">' +
+
+            (
+              video.thumb
+              ?
+              '<img class="video-thumb" src="' +
+              escapeHTML(video.thumb) +
+              '" alt="">'
+              :
+              ''
+            ) +
+
+            '<div class="video-title">' +
+            escapeHTML(
+              video.title ||
+              "動画"
+            ) +
+            '</div>' +
+
+          '</a>';
+
+      });
+
+  }
+
+
+  // =========================
+  // 直近の動画がまだない場合
+  // =========================
+
+  else {
+
+    html +=
+      '<div class="section-title">' +
+      '▶ 直近の動画' +
+      '</div>' +
+
+      '<div style="' +
+      'font-size:12px;' +
+      'color:#777;' +
+      'padding:8px;' +
+      '">' +
+      '動画情報を取得できませんでした' +
+      '</div>';
+
+  }
+
+
+  // =========================
+  // SNS
+  // =========================
+
+  html +=
+    '<div class="modal-socials">' +
+
+      '<a class="modal-social" href="' +
+      'https://www.youtube.com/@' +
+      encodeURIComponent(m.youtube) +
+      '" target="_blank" rel="noopener">' +
+      'YouTube' +
+      '</a>' +
+
+      '<a class="modal-social" href="' +
+      'https://x.com/' +
+      encodeURIComponent(m.x) +
+      '" target="_blank" rel="noopener">' +
+      'X' +
+      '</a>' +
+
+    '</div>';
+
+
+  content.innerHTML = html;
+
+  modal.classList.add("show");
+}
 
   /* =========================
      ヘッダー
